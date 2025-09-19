@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.09 file:///C:/Users/altova/Documents/Altova/MapForce2025/MapForceExamples/pacs.008.001.09-v1.xsd" xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.09">
+	<FIToFICstmrCdtTrf>
+		<GrpHdr>
+			<MsgId>1234567890</MsgId>
+		</GrpHdr>
+		<CdtTrfTxInf>
+			<PmtTpInf/>
+			<IntrBkSttlmAmt Ccy="27EUR1000000,"/>
+			<IntrBkSttlmDt>202503-01-01</IntrBkSttlmDt>
+			<InstdAmt Ccy="EUR"/>
+			<XchgRate>1.175</XchgRate>
+			<ChrgsInf>
+				<Amt Ccy="BEN"/>
+			</ChrgsInf>
+			<PrvsInstgAgt1>
+				<FinInstnId>
+					<BICFI>/REASON/INVALID_ACCOUNT</BICFI>
+				</FinInstnId>
+			</PrvsInstgAgt1>
+			<Dbtr/>
+			<DbtrAcct/>
+			<Purp>
+				<Prtry>20250327150000</Prtry>
+			</Purp>
+			<RgltryRptg>
+				<Dtls>
+					<Inf>REGULATORY INFO</Inf>
+				</Dtls>
+			</RgltryRptg>
+			<RmtInf>
+				<Ustrd>INVOICE 001234</Ustrd>
+			</RmtInf>
+		</CdtTrfTxInf>
+	</FIToFICstmrCdtTrf>
+</Document>

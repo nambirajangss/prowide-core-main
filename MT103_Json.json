@@ -1,0 +1,260 @@
+{
+    "type": "MT",
+    "basicHeaderBlock": {
+        "applicationId": "F",
+        "serviceId": "01",
+        "logicalTerminal": "BANKDEFFXXXX",
+        "sessionNumber": "0000",
+        "sequenceNumber": "000000"
+    },
+    "applicationHeaderBlock": {
+        "senderInputTime": "1518",
+        "MIRDate": "151005",
+        "MIRLogicalTerminal": "BANKDEFFXXXX",
+        "MIRSessionNumber": "0000",
+        "MIRSequenceNumber": "000000",
+        "messageType": "103",
+        "blockType": "O",
+        "direction": "O"
+    },
+    "userHeaderBlock": {
+        "userHeaderBlockFields": {
+            "field108": {
+                "name": "108",
+                "mUR": "MT103"
+            }
+        }
+    },
+    "textBlock": {
+        "textBlockFields": {
+            "sequenceA": {
+                "field20": {
+                    "name": "20",
+                    "reference": "1234567890"
+                },
+                "RepeatField13C": [
+                    {
+                        "name": "13C",
+                        "code": "REMITTANCE",
+                        "timeIndication": "INVO",
+                        "sign": "I",
+                        "timeOffset": "CE1234"
+                    },
+                    {
+                        "name": "13C",
+                        "code": "REMITTANCE",
+                        "timeIndication": "INVO",
+                        "sign": "I",
+                        "timeOffset": "CE5678"
+                    }
+                ],
+                "field23B": {
+                    "name": "23B",
+                    "type": "CRED"
+                },
+                "RepeatField23E": [
+                    {
+                        "name": "23E",
+                        "additionalInformation": "FOR/CLIENT_PAYMENT_1"
+                    },
+                    {
+                        "name": "23E",
+                        "additionalInformation": "FOR/CLIENT_PAYMENT_2"
+                    }
+                ],
+                "field26T": {
+                    "name": "26T",
+                    "type": "20250327150000"
+                },
+                "field32A": {
+                    "name": "32A",
+                    "date": "202503",
+                    "amount": "27EUR1000000,"
+                },
+                "field33B": {
+                    "name": "33B",
+                    "currency": "EUR",
+                    "amount": "1000000,"
+                },
+                "field36": {
+                    "name": "36",
+                    "rate": "1.175"
+                },
+                "field50A": {
+                    "name": "50A",
+                    "account": "1234567890",
+                    "identifierCode": "/8765432190"
+                },
+                "field50F": {
+                    "name": "50F",
+                    "partyIdentifier": "/9876543210",
+                    "number1": "JANE DOE",
+                    "number2": "456 CLIENT ST",
+                    "number3": "CITY, COUNTRY"
+                },
+                "field50K": {
+                    "name": "50K",
+                    "account": "1122334455",
+                    "nameAndAddress": "JOHN SMITH",
+                    "nameAndAddress2": "789 STREET RD",
+                    "nameAndAddress3": "TOWN, COUNTRY"
+                },
+                "field51A": {
+                    "name": "51A",
+                    "identifierCode": "BANKDEFF"
+                },
+                "field52A": {
+                    "name": "52A",
+                    "identifierCode": "BANKDEFF"
+                },
+                "field52D": {
+                    "name": "52D",
+                    "nameAndAddress": "BANKUS33"
+                },
+                "field53A": {
+                    "name": "53A",
+                    "identifierCode": "BANKGB33"
+                },
+                "field53B": {
+                    "name": "53B",
+                    "location": "BANKUS44"
+                },
+                "field53D": {
+                    "name": "53D",
+                    "nameAndAddress": "BANKCA11"
+                },
+                "field54A": {
+                    "name": "54A",
+                    "identifierCode": "BANKDEFF"
+                },
+                "field54B": {
+                    "name": "54B",
+                    "location": "BANKDEFG"
+                },
+                "field54D": {
+                    "name": "54D",
+                    "nameAndAddress": "BANKDEFF"
+                },
+                "field55A": {
+                    "name": "55A",
+                    "identifierCode": "BANKDEFF"
+                },
+                "field55B": {
+                    "name": "55B",
+                    "location": "BANKGB33"
+                },
+                "field55D": {
+                    "name": "55D",
+                    "nameAndAddress": "BANKUS22"
+                },
+                "field56A": {
+                    "name": "56A",
+                    "identifierCode": "BANKDEFF"
+                },
+                "field56C": {
+                    "name": "56C",
+                    "account": "BANKUS11"
+                },
+                "field56D": {
+                    "name": "56D",
+                    "nameAndAddress": "BANKCA33"
+                },
+                "field57A": {
+                    "name": "57A",
+                    "identifierCode": "DEUTDEFF"
+                },
+                "field57B": {
+                    "name": "57B",
+                    "location": "DEUTUS11"
+                },
+                "field57C": {
+                    "name": "57C",
+                    "account": "DEUTGB22"
+                },
+                "field57D": {
+                    "name": "57D",
+                    "nameAndAddress": "DEUTCA44"
+                },
+                "field59A": {
+                    "name": "59A",
+                    "account": "9876543210",
+                    "identifierCode": "/8765432190"
+                },
+                "field59F": {
+                    "name": "59F",
+                    "account": "3216549870",
+                    "number1": "MATT BLACK",
+                    "number2": "789 CLIENT RD",
+                    "number3": "DIFFERENT CITY, COUNTRY"
+                },
+                "field59": {
+                    "name": "59",
+                    "account": "0000000000",
+                    "nameAndAddress": "GLOBAL CLIENT",
+                    "nameAndAddress2": "123 GLOBAL ST",
+                    "nameAndAddress3": "GLOBE CITY, COUNTRY"
+                },
+                "field70": {
+                    "name": "70",
+                    "narrative": "INVOICE 001234",
+                    "structured": [],
+                    "unstructuredFragments": [
+                        "INVOICE 001234"
+                    ]
+                },
+                "field71A": {
+                    "name": "71A",
+                    "code": "SHA"
+                },
+                "RepeatField71F": [
+                    {
+                        "name": "71F",
+                        "currency": "OUR"
+                    },
+                    {
+                        "name": "71F",
+                        "currency": "OUR"
+                    }
+                ],
+                "field71G": {
+                    "name": "71G",
+                    "currency": "BEN"
+                },
+                "field72": {
+                    "name": "72",
+                    "narrative": "/REASON/INVALID_ACCOUNT",
+                    "structured": [
+                        {
+                            "narrativeFragments": [
+                                "INVALID_ACCOUNT"
+                            ],
+                            "narrativeSupplementFragments": [],
+                            "codeword": "REASON"
+                        }
+                    ],
+                    "unstructuredFragments": []
+                },
+                "field77B": {
+                    "name": "77B",
+                    "narrative": "REGULATORY INFO",
+                    "structured": [],
+                    "unstructuredFragments": [
+                        "REGULATORY INFO"
+                    ]
+                }
+            }
+        }
+    },
+    "trailerBlock": {
+        "trailerBlockFields": {
+            "fieldMAC": {
+                "name": "MAC",
+                "value": "88B4F929"
+            },
+            "fieldCHK": {
+                "name": "CHK",
+                "value": "22EF370A4073"
+            }
+        }
+    }
+}

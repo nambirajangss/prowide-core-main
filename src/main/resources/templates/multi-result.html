@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Multi XML Comparison Result</title>
+    <style>
+        .summary-table, .diff-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td { border: 1px solid #ccc; padding: 6px; text-align: center; }
+        .match { background-color: #e8f5e9; }  /* light green */
+        .diff { background-color: #ffebee; }   /* light red */
+    </style>
+</head>
+<body>
+<h2>Multi-Test Results</h2>
+
+<table class="summary-table">
+    <tr>
+        <th>File</th>
+        <th>Pass %</th>
+        <th>Error Count</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="res, iter : ${results}">
+        <td th:text="${res.fileName}"></td>
+        <td th:text="${res.passPercent} + '%'"></td>
+        <td th:text="${res.errorCount}"></td>
+        <td>
+            <button onclick="toggleDetails([[${iter.index}]])">Show/Hide Details</button>
+            <!--<a th:href="@{'/swift/download-pdf?file=' + ${res.fileName}}" target="_blank">Download PDF</a>-->
+        </td>
+    </tr>
+</table>
+
+<div th:each="res, iter : ${results}" th:id="'details-' + ${iter.index}" style="display:none">
+    <h3 th:text="'Details for ' + ${res.fileName}"></h3>
+    <table class="diff-table">
+        <tr>
+            <th>XPath</th>
+            <th>Actual</th>
+            <th>Expected</th>
+        </tr>
+        <tr th:each="diff : ${res.diffs}" th:class="${diff.match} ? 'match' : 'diff'">
+            <td th:text="${diff.xpath}"></td>
+            <td th:text="${diff.xml1Value}"></td>
+            <td th:text="${diff.xml2Value}"></td>
+        </tr>
+    </table>
+</div>
+
+<script>
+function toggleDetails(idx) {
+    const section = document.getElementById('details-' + idx);
+    section.style.display = (section.style.display === 'none') ? 'block' : 'none';
+}
+</script>
+
+</body>
+</html>

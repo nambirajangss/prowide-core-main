@@ -1,0 +1,364 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'ru.vyarus:gradle-quality-plugin:5.0.0'
+        classpath 'pl.allegro.tech.build:axion-release-plugin:1.14.5' // starting with version 15.* requires Java 11
+        classpath 'io.github.gradle-nexus:publish-plugin:2.0.0'
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.13.0' // above this version requires Java 11
+    }
+}
+plugins {
+    id 'org.springframework.boot' version '2.7.15' apply false
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+}
+apply plugin: 'org.springframework.boot'
+apply plugin: 'pl.allegro.tech.build.axion-release'
+apply plugin: 'java-library-distribution'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+apply plugin: 'jacoco'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'ru.vyarus.quality'
+apply plugin: 'io.github.gradle-nexus.publish-plugin'
+
+archivesBaseName = 'pw-swift-core'
+group 'com.prowidesoftware'
+
+project.ext {
+    SRU = 'SRU2024'
+}
+
+scmVersion {
+    tag {
+        prefix.set("${SRU}")
+        versionSeparator.set('-')
+    }
+}
+//project.version = "${SRU}-${scmVersion.version}"
+project.version = "${SRU}-9.5.0"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    doFirst {
+        println 'Compiling with ' + getJavaCompiler().get().getMetadata().getInstallationPath()
+    }
+}
+
+//tasks.withType(com.github.spotbugs.SpotBugsTask).configureEach { enabled = false }
+//tasks.withType(Pmd).configureEach { enabled = false }
+//tasks.withType(Checkstyle).configureEach { enabled = false }
+
+configurations.all {
+    exclude group: 'com.github.spotbugs', module: 'spotbugs'
+    exclude group: 'pmd', module: 'pmd-java'
+    exclude group: 'com.puppycrawl.tools', module: 'checkstyle'
+
+	resolutionStrategy {
+        force 'org.apache.commons:commons-compress:1.21'
+    }    
+}
+
+configurations {
+    jaxbTools
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-web'  // Spring Boot Web Starter
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA for database access
+    implementation 'org.springframework.boot:spring-boot-starter-validation' // Validation API
+    // JSON processing with Gson (optional)
+    implementation 'com.google.code.gson:gson:2.8.9'
+    // Database Driver (Example: PostgreSQL or MySQL)
+    runtimeOnly 'org.postgresql:postgresql'
+    // Lombok for reducing boilerplate code (optional)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+	
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    
+
+	// Apache POI core
+    implementation 'org.apache.poi:poi:5.2.5'
+	// Apache POI for .xlsx (XSSF + OPC)
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+	// Optional (sometimes needed for advanced Excel features)
+    // Latest commons-compress (safe with POI)
+    implementation 'org.apache.commons:commons-compress:1.26.1'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'org.apache.xmlbeans:xmlbeans:5.1.1'
+
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+	
+	// PDF Dependency
+	implementation 'com.itextpdf:itextpdf:5.5.13.3'
+	implementation 'com.github.librepdf:openpdf:1.3.39'
+	
+    // JAXB runtime (needed if you will unmarshal XML at runtime)
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
+
+    // tools used only at build time
+    jaxbTools 'org.glassfish.jaxb:jaxb-xjc:4.0.3'
+    jaxbTools 'org.glassfish.jaxb:jaxb-core:4.0.3'
+    jaxbTools 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
+	jaxbTools 'jakarta.activation:jakarta.activation-api:2.1.3'   // 🔥 this one fixes MimeTypeParseException
+	jaxbTools 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'   // 🔥 add this to fix HexBinaryAdapter
+
+    // Jakarta Activation (API + impl)
+    implementation 'jakarta.activation:jakarta.activation-api:2.1.3'
+    implementation 'org.eclipse.angus:angus-activation:2.0.1'
+
+    compileOnly 'javax.persistence:javax.persistence-api:2.2'
+    compileOnly 'javax.xml.bind:jaxb-api:2.3.1'
+    compileOnly 'javax.validation:validation-api:2.0.1.Final'
+
+
+}
+
+/*task generateJaxb {
+    doLast {
+        ant.taskdef(
+            name: 'xjc',
+            classname: 'com.sun.tools.xjc.XJCTask',
+            classpath: configurations.jaxbTools.asPath
+        )
+        ant.xjc(
+            //destdir: "$buildDir/generated-sources",
+            destdir: 'C:/Users/gss/Softwares/MTMX Project/MTConverterV1/prowide-core-main/src/generated/java',
+            package: 'com.gss.vmc.jaxb.head00100103',
+            schema: 'C:/Users/gss/Softwares/MTMX Project/MT103 Documents/XSD-ISO20022-issettled/iso20022-issettled-main/xsd/head.001.001.03.xsd'
+            //schema: 'src/main/resources/your-schema.xsd'
+        )
+    }
+}
+*/
+//gradle generateJaxbHead
+task generateJaxbHead(type: JavaExec) {
+    group = "code generation"
+    description = "Generate Java sources from head.001.001.03.xsd XSD schema"
+
+    classpath = configurations.jaxbTools
+    //mainClass = 'com.sun.tools.xjc.Driver' // working fine, tested
+    mainClass = 'com.sun.tools.xjc.XJCFacade'
+
+    args = [
+        '-d', "C:/Users/gss/Softwares/MTMX Project/MTConverterV1/prowide-core-main/src/generated/java",
+        '-p', 'com.gss.vmc.jaxb.head00100103',
+        'C:/Users/gss/Softwares/MTMX Project/MT103 Documents/XSD-ISO20022-issettled/iso20022-issettled-main/xsd/head.001.001.03.xsd'
+    ]
+}
+
+//gradle generateJaxbPacs008
+task generateJaxbPacs008(type: JavaExec) {
+    group = "code generation"
+    description = "Generate Java sources from pacs.008.001.09.xsd XSD schema"
+
+    classpath = configurations.jaxbTools
+    //mainClass = 'com.sun.tools.xjc.Driver' // working fine, tested
+    mainClass = 'com.sun.tools.xjc.XJCFacade'
+
+    args = [
+        '-d', "C:/Users/gss/Softwares/MTMX Project/MTConverterV1/prowide-core-main/src/generated/java",
+        '-p', 'com.gss.vmc.jaxb.pacs00800109',
+        'C:/Users/nambirajank/OneDrive - Global Software Solutions Pvt Ltd/Desktop/XSD-TEST/pacs.008.001.09.xsd'
+    ]
+}
+
+//gradle generateJaxbPacs009
+task generateJaxbPacs009(type: JavaExec) {
+    group = "code generation"
+    description = "Generate Java sources from pacs.009.001.09.xsd XSD schema"
+
+    classpath = configurations.jaxbTools
+    //mainClass = 'com.sun.tools.xjc.Driver' // working fine, tested
+    mainClass = 'com.sun.tools.xjc.XJCFacade'
+
+    args = [
+        '-d', "C:/Users/gss/Softwares/MTMX Project/MTConverterV1/prowide-core-main/src/generated/java",
+        '-p', 'com.gss.vmc.jaxb.pacs00900109',
+        'C:/Users/nambirajank/OneDrive - Global Software Solutions Pvt Ltd/Desktop/XSD-TEST/pacs.009.001.09.xsd'
+    ]
+}
+
+//compileJava.dependsOn generateJaxb
+//sourceSets.main.java.srcDir "$buildDir/generated-sources"
+sourceSets.main.java.srcDirs = ['src/main/java', 'src/generated/java']
+
+
+
+tasks.withType(Jar).configureEach {
+    manifest.attributes(
+            'Specification-Title': 'Prowide Core',
+            'Specification-Version': project.version,
+            'Specification-Vendor': "${SRU}",
+            'Implementation-Title': 'Prowide Core',
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'www.prowidesoftware.com',
+            'Built-OS': System.getProperty('os.name'),
+            'Source-Compatibility': project.sourceCompatibility,
+            'Target-Compatibility': project.targetCompatibility,
+            'Built-Date': new Date().format("yyyy-MM-dd"),
+            'Automatic-Module-Name': 'com.prowidesoftware.core'
+    )
+}
+
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+static def formattedDate() {
+    new Date().format('dd MMM yyyy')
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+project.ext {
+    nexusRepo = project.version.endsWith('-SNAPSHOT') ? 'maven-snapshots' : 'maven-releases'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            afterEvaluate {
+                from components.java
+                artifactId = 'pw-swift-core'
+                groupId = 'com.prowidesoftware'
+                version = "${version}"
+                pom {
+                    name = 'Prowide Core'
+                    description = 'Prowide Library for SWIFT messages'
+                    url = 'https://www.prowidesoftware.com'
+                    scm {
+                        url = 'https://github.com/prowide/prowide-core.git'
+                        connection = 'git@github.com:prowide/prowide-core.git'
+                    }
+                    inceptionYear = '2006'
+                    licenses {
+                        license {
+                            name = 'Apache License Version 2.0'
+                            url = 'https://www.apache.org/licenses/LICENSE-2.0'
+                            distribution = 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'zubri'
+                            name = 'Sebastian Zubrinic'
+                            email = 'sebastian@prowidesoftware.com'
+                        }
+                    }
+                    organization {
+                        name = 'Prowide'
+                        url = 'https://www.prowidesoftware.com'
+                    }
+                }
+            }
+        }
+    }
+
+    // Prowide repo releases
+    repositories {
+		
+		maven {
+			url "https://nexus.paymentcomponents.com/repository/public"
+		}
+	}
+}
+jar.finalizedBy generatePomFileForMavenJavaPublication
+
+tasks.withType(GenerateModuleMetadata).configureEach {
+    // to avoid metadata in the generated pom.xml files
+    enabled = false
+}
+
+// OSS Sonatype releases
+signing {
+    required { project.hasProperty('SONATYPE_RELEASE') }
+    sign publishing.publications.mavenJava
+}
+java {
+    withSourcesJar()
+}
+nexusPublishing {
+    repositories {
+        sonatype()
+    }
+}
+
+// Zip GitHub releases
+distributions {
+    main {
+        contents {
+            from sourcesJar
+            into ('lib') {
+                from (project.configurations.runtimeClasspath)
+            }
+            from files('LICENSE.txt')
+            from files('CHANGELOG.md')
+            from ("$buildDir/publications/mavenJava/pom-default.xml") {
+                rename ".*", "pom.xml"
+            }
+        }
+    }
+}
+
+distTar.enabled = false
+
+distZip {
+    dependsOn generatePomFileForMavenJavaPublication
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// Alternative (manual) staging upload to OSS Sonatype
+tasks.register('bundle', Jar) {
+    dependsOn build
+    onlyIf {
+        project.hasProperty('SONATYPE_RELEASE')
+    }
+    description 'Creates the bundle.jar for Maven Central distribution'
+    from jar
+    from sourcesJar
+    from ("$buildDir/publications/mavenJava/pom-default.xml") {
+        rename ".*", "pom.xml"
+    }
+    from ("$buildDir/publications/mavenJava/pom-default.xml.asc") {
+        rename ".*", "pom.xml.asc"
+    }
+    from ("$buildDir/libs") {
+        include '*.asc'
+    }
+    archiveFileName.set('bundle.jar')
+}

@@ -1,0 +1,32 @@
+version: "2"
+
+plugins:
+  sonar-java:
+    enabled: true
+    config:
+      sonar.java.source: 8
+      minimum_severity: critical
+
+checks:
+  method-complexity:
+    config:
+      threshold: 8
+
+exclude_patterns:
+  - ".gradle/"
+  - "gradle/"
+  - ".idea/"
+  - "build/"
+  - "bin/"
+  - ".settings/"
+  # deprecated API
+  - "**/com/prowidesoftware/swift/model/ISOCountries.java"
+  - "**/com/prowidesoftware/swift/model/ISOCurrencies.java"
+  - "**/com/prowidesoftware/swift/model/mx/MxPayload.java"
+  - "**/com/prowidesoftware/swift/io/PPCFileReader.java"
+  - "**/com/prowidesoftware/swift/model/PropertyResource.java"
+  - "**/com/prowidesoftware/swift/io/ReaderIterator.java"
+  - "**/com/prowidesoftware/swift/model/SwiftServiceId.java"
+  - "**/com/prowidesoftware/swift/io/writer/TextWriter.java"
+  - "**/com/prowidesoftware/swift/WifeException.java"
+  - "**/com/prowidesoftware/swift/DeleteSchedule.java"

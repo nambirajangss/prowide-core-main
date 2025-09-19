@@ -1,0 +1,52 @@
+{
+  "type": "MT",
+  "basicHeaderBlock": {
+    "applicationId": "F",
+    "serviceId": "01",
+    "logicalTerminal": "XXXXXXYYYY",
+    "sessionNumber": "0000",
+    "sequenceNumber": "000000"
+  },
+  "applicationHeaderBlock": {
+    "senderInputTime": "0000",
+    "MIRDate": "000000",
+    "MIRLogicalTerminal": "XXXXXXYYYY",
+    "MIRSessionNumber": "0000",
+    "MIRSequenceNumber": "000000",
+    "receiverOutputDate": "000000",
+    "receiverOutputTime": "0000",
+    "messagePriority": "N",
+    "messageType": "000",
+    "blockType": "2",
+    "direction": "I"
+  },
+  "userHeaderBlock": {
+    "userHeaderBlockFields": {}
+  },
+  "textBlock": {
+    "textBlockFields": {
+      "sequenceA": {
+        "field70": {
+          "name": "70",
+          "narrative": "DEBLZ",
+          "structured": [],
+          "unstructuredFragments": [
+            "DEBLZ"
+          ]
+        },
+        "field55A": {
+          "name": "55A",
+          "account": "mtClearingCode-TEST",
+          "identifierCode": "BICFI-TEST"
+        }
+      },
+      "sequenceB": {
+        "field55A": {
+          "name": "55A",
+          "account": "mtClearingCode-TEST-SEQB",
+          "identifierCode": "BICFI-TEST-SEQB"
+        }
+      }
+    }
+  }
+}

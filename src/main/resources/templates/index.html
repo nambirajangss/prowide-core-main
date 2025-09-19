@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Auto XML Test Runner</title>
+</head>
+<body>
+<h2>Auto XML Comparison Runner</h2>
+
+<!-- Form 1: Compare Two Files -->
+<h3>Compare Two Files</h3>
+<form method="post" enctype="multipart/form-data" action="/swift/compare">
+    <label>File 1: <input type="file" name="file1" required></label><br><br>
+    <label>File 2: <input type="file" name="file2" required></label><br><br>
+    <button type="submit">Compare</button>
+</form>
+
+<hr>
+
+<!-- Form 2: Run Multi-Test from Folder -->
+<h3>Run Multiple Tests from Folder</h3>
+<form th:action="@{/swift/run-tests}" method="post">
+    <label>Enter Folder Path:</label>
+    <input type="text" name="folderPath" size="80" required>
+    <button type="submit">Run Tests</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>XML Comparison Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .summary {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 25px;
+        }
+        .summary-card {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .summary-card h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #666;
+        }
+        .summary-card p {
+            margin: 5px 0 0;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+		.btn {
+		    padding: 10px 15px;
+		    background-color: #1976d2;
+		    color: #fff;
+		    border: none;
+		    border-radius: 4px;
+		    text-decoration: none;
+		    cursor: pointer;
+		}
+		.btn:hover { background-color: #1565c0; }
+        /* Only 2 colors now */
+        .match { background-color: #e8f5e9; }  /* light green */
+        .diff { background-color: #ffebee; }   /* light red */
+    </style>
+</head>
+<body>
+
+<h2>XML Comparison Result</h2>
+
+<div class="summary">
+    <div class="summary-card">
+        <h3>Pass Percentage</h3>
+        <p th:text="${passPercent + '%'}"></p>
+    </div>
+    <div class="summary-card">
+        <h3>Error Count</h3>
+        <p th:text="${errorCount}"></p>
+    </div>
+	<div class="summary-card">
+		<!-- Download PDF button -->
+		<h3><a th:href="@{/swift/download-pdf}" class="btn">Download as PDF</a></h3>
+        <p></p>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>XPath</th>
+            <th th:text="${file1Name}">File1</th>
+            <th th:text="${file2Name}">File2</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="diff : ${diffs}" th:class="${diff.match} ? 'match' : 'diff'">
+            <td th:text="${diff.xpath}"></td>
+            <td th:text="${diff.xml1Value}"></td>
+            <td th:text="${diff.xml2Value}"></td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
