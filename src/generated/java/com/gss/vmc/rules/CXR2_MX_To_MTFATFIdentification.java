@@ -1,9 +1,9 @@
-package com.gss.vmc.rules;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+	CXR2_MX_To_MTFATFIdentification
+		*MX_To_MTAddressLineType(CXR42)
  * Java class to translate Swift MX (XML) to MT (JSON) for FATF ID handling based on provided pseudocode.
  * 
 	List<Map<String, String>>
@@ -17,12 +17,40 @@ import java.util.stream.Collectors;
 	String
 	List<String>
 	String
- 
+	
+	
+	
+			Pacs008
+			    50F -> organisationOtherList -> Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	OrgId>	Othr		
+					-> issuer	             ->	Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	OrgId>	Othr>	Issr	
+					-> schemeNameCode        ->	Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	OrgId>	Othr>	SchmeNm>	Cd
+					-> identification	     ->	Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	OrgId>	Othr>	Id	
+					-> privateOtherList      -> Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	PrvtId>	Othr		
+					-> issuer	             ->	Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	PrvtId>	Othr>	Issr	
+					-> schemeNameCode        ->	Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	PrvtId>	Othr>	SchmeNm>	Cd
+					-> identification	     ->	Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	Id>	PrvtId>	Othr>	Id	
+					-> postalAddressCountry	 ->Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	PstlAdr>	Ctry
+					-> addressLineList	     ->Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	PstlAdr>	AdrLine*4
+					-> countryOfResidence	 ->Document>	FIToFICstmrCdtTrf>	CdtTrfTxInf>	Dbtr>	CtryOfRes
+					
+			Pacs009.Cov
+				50F -> organisationOtherList -> Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	OrgId>	Othr		
+					-> issuer	             ->	Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	OrgId>	Othr>	Issr	
+					-> schemeNameCode        ->	Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	OrgId>	Othr>	SchmeNm>	Cd
+					-> identification	     ->	Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	OrgId>	Othr>	Id	
+					-> privateOtherList      -> Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	PrvtId>	Othr		
+					-> issuer	             ->	Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	PrvtId>	Othr>	Issr	
+					-> schemeNameCode        ->	Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	PrvtId>	Othr>	SchmeNm>	Cd
+					-> identification	     ->	Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	Id>	PrvtId>	Othr>	Id	
+					-> postalAddressCountry	 -> Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	PstlAdr>	Ctry
+					-> addressLineList	     -> Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	PstlAdr>	AdrLine*4
+					-> countryOfResidence	 -> Document>	FICdtTrf>	CdtTrfTxInf> UndrlygCstmrCdtTrf>	DbtrAcct>	CtryOfRes
+
+	
  * Input HashMap Structure:
  * - key: "organisationOtherList"
  *   value-Data-Type: List<Map<String, String>>
  *   Pseudocode-XMLPath: Identification.OrganisationIdentification.Other
- * 	 PACS08/PACS09-XMLPath: ?????
  *   Description: List of organization identification details, each map containing schemeNameCode, issuer, and identification.
  * - key: "privateOtherList"
  *   value-Data-Type: List<Map<String, String>>
@@ -54,6 +82,24 @@ import java.util.stream.Collectors;
  *   Description: Country of residence for private identification fallback.
  * 
  * Output HashMap Structure:
+	mtFatfId
+	mtCountryCode
+	mtSchemeCode
+	mtIssuer
+	mtIdentifier
+	mtPartyIdentifier
+	mtCode8
+		Pacs008 && Pacs009.Cov
+					50F -> mtFatfId          -> Partyidentifier
+						-> mtCountryCode     -> NameAndAddress*4
+						-> mtSchemeCode      -> NameAndAddress*4
+						-> mtIssuer          -> NameAndAddress*4
+						-> mtIdentifier      -> NameAndAddress*4
+						-> mtPartyIdentifier -> Partyidentifier
+						-> mtCode8			 -> NameAndAddress*4
+						
+						
+						
  * - key: "mtFatfId"
  *   value-Data-Type: String
  *   Pseudocode-Output: MTFATFId
@@ -98,29 +144,6 @@ public class CXR2_MX_To_MTFATFIdentification {
     private static final Set<String> ISO_LIST = Set.of("GS1G", "DUNS", "TXID", "CUST", "EMPL"); // Placeholder for ISO LIST
     private static final Set<String> EXCLUDED_SCHEMES = Set.of("CUST", "EMPL", "TXID");
 
-    // Helper method stubs
-    boolean isPresent(Object obj) {
-        return obj != null && (!(obj instanceof String) || !((String) obj).isEmpty());
-    }
-
-    boolean isCountryCode(String code) {
-        return code != null && code.matches("[A-Z]{2}");
-    }
-
-    boolean isEmpty(String str) {
-        return str == null || str.isEmpty();
-    }
-
-    String substring(String str, int start, int end) {
-        if (str == null || start > str.length()) return "";
-        if (end > str.length()) end = str.length();
-        return str.substring(start - 1, end);
-    }
-
-    String concatenate(String... parts) {
-        return String.join("", parts);
-    }
-    
     /**
      * Translates MX Party Identification to MT FATF ID format.
      *
@@ -140,8 +163,29 @@ public class CXR2_MX_To_MTFATFIdentification {
         boolean successfulFatf = false;
         List<String> errorCodes = new ArrayList<>();
 
-        
-        
+        // Helper method stubs
+        boolean isPresent(Object obj) {
+            return obj != null && (!(obj instanceof String) || !((String) obj).isEmpty());
+        }
+
+        boolean isCountryCode(String code) {
+            return code != null && code.matches("[A-Z]{2}");
+        }
+
+        boolean isEmpty(String str) {
+            return str == null || str.isEmpty();
+        }
+
+        String substring(String str, int start, int end) {
+            if (str == null || start > str.length()) return "";
+            if (end > str.length()) end = str.length();
+            return str.substring(start - 1, end);
+        }
+
+        String concatenate(String... parts) {
+            return String.join("", parts);
+        }
+
         // Case 1 & 2: Organisation Identification
         List<Map<String, String>> orgOtherList = (List<Map<String, String>>) input.getOrDefault("organisationOtherList", Collections.emptyList());
         if (!orgOtherList.isEmpty()) {
