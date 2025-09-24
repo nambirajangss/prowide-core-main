@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.gss.vmc.MtJsonMessage.*;
-import com.prowidesoftware.swift.model.field.Field;
 
 import java.util.HashMap;
 import java.util.Map;
